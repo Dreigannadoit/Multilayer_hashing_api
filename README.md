@@ -26,3 +26,15 @@ Read the following topics in Obfuscating Data ([click here](https://online.msuii
 
     - In each of the cases 5.A and 5.B, the result is c (Base64)
 6. Encrypted output is displayed as the ciphertext
+
+#### For decryption:
+1. User enters a Base64 encoded ciphertext cBase64 ∈ C = {A-Z, a-z, 0-9, +, /}^n/6 
+2. For each Base64 character in cBase64:
+    - If the cipher involves letter rotation, rotate 32 characters before it
+    - Else if the cipher involves a key (i.e., Vigenere cipher), perform character subtraction (m (Base64) = c (Base64) - k (Base64)) based on index
+    - In each of the cases 2.A and 2.B, the result is m (Base64)
+
+3. m (Base64) is converted to a binary string: m (Base64) ∈ {0, 1}^6n+p 
+4. m (Base64) is grouped into 8 bits, which becomes mASCII ∈ {0, 1}^8n 
+5. Each 8-bit group is converted to its ASCII character representation
+6. The decrypted text m is displayed, m ∈ {A-Z, a-z, 0-9}^n
