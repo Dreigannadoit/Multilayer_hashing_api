@@ -1,4 +1,4 @@
-# Multilayer_hashing_api
+# Data Obfuscation - MultiLayer Hashing Program
 
 Data obfuscation (DO) is a technique that masks data by scrambling it to prevent unauthorized access to sensitive information. In particular, we perform cryptographic data obfuscation, which involves encoding data before it is transferred to another encryption scheme. This will remove the ability to use frequency analysis to break ciphers.
 
