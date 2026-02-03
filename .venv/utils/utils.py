@@ -33,3 +33,11 @@ def base64_to_bits(b64):
 
 def repeat_key(key, length):
     return (key * (length // len(key) + 1))[:length]
+
+
+if __name__ == "__main__":
+    # bits_to_base64()
+    # repeat_key()
+    # base64_to_bits(b64)
+    print("Test Result")
+    pass
