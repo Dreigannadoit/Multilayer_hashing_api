@@ -1,4 +1,4 @@
-# Data Obfuscation - MultiLayer Hashing Program
+# Data Obfuscation - MultiLayer Hashing Algorithm
 
 Data obfuscation (DO) is a technique that masks data by scrambling it to prevent unauthorized access to sensitive information. In particular, we perform cryptographic data obfuscation, which involves encoding data before it is transferred to another encryption scheme. This will remove the ability to use frequency analysis to break ciphers.
 
@@ -38,3 +38,10 @@ Read the following topics in Obfuscating Data ([click here](https://online.msuii
 4. m (Base64) is grouped into 8 bits, which becomes mASCII ∈ {0, 1}^8n 
 5. Each 8-bit group is converted to its ASCII character representation
 6. The decrypted text m is displayed, m ∈ {A-Z, a-z, 0-9}^n
+---
+### How to Use
+##### Making Alphabete Table
+In the Main folder create a `.env` file. In it, define your alphabete as `ALPHABET_TABLE`
+```.env
+ALPHABET_TABLE="qwertyuiopasdfghjklzxcvbnm{}:"<>?"
+```
