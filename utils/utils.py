@@ -16,6 +16,8 @@ def ascii_bits_to_char(bits):
             chars.append(chr(int(byte, 2)))
     return ''.join(chars)
 
+
+# TODO: use b64encode()
 def bits_to_base64(bits):
     result = ""
     padding = (6 - len(bits) % 6) % 6
