@@ -11,6 +11,19 @@ def ascii_bits_to_char(bits):
             chars.append(chr(int(byte, 2)))
     return ''.join(chars)
 
+def bits_to_base64(bits):
+    result = ""
+    padding = (6 - len(bits) % 6) % 6
+    bits += '0' * padding
+
+    for i in range(0, len(bits), 6):
+        index = int(bits[i:i+6], 2)
+        result += ALPHABET[index]
+
+    while len(result) % 4 != 0:
+        result += '='
+    return result
+
 def base64_to_bits(b64):
     bits = ""
     for c in b64:
