@@ -42,6 +42,6 @@ Read the following topics in Obfuscating Data ([click here](https://online.msuii
 ### How to Use
 ##### Making Alphabete Table
 In the Main folder create a `.env` file. In it, define your alphabete as `ALPHABET_TABLE`
-```.env
+```python
 ALPHABET_TABLE="qwertyuiopasdfghjklzxcvbnm{}:"<>?"
 ```
