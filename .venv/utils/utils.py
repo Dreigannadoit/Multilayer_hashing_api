@@ -1,4 +1,9 @@
-ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+ALPHABET = os.getenv("ALPHABET_TABLE")
 
 def char_to_ascii_bits(s):
     return ''.join(f"{ord(c):08b}" for c in s)
