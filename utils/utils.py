@@ -6,6 +6,15 @@ load_dotenv()
 
 ALPHABET = os.getenv("ALPHABET_TABLE")
 
+# Ensure ALPHABET has all 64 characters
+if len(ALPHABET) != 64:
+    print(f"Warning: ALPHABET has {len(ALPHABET)} characters, should be 64")
+    # If missing + and /, add them
+    if '+' not in ALPHABET:
+        ALPHABET += '+'
+    if '/' not in ALPHABET:
+        ALPHABET += '/'
+
 def char_to_ascii_bits(s):
     return ''.join(f"{ord(c):08b}" for c in s)
 
@@ -16,7 +25,6 @@ def ascii_bits_to_char(bits):
         if len(byte) == 8:
             chars.append(chr(int(byte, 2)))
     return ''.join(chars)
-
 
 def bits_to_base64(bits):
     bytes_data = bits_to_bytes(bits)
@@ -44,7 +52,12 @@ def bytes_to_bits(bytes_data):
 def repeat_key(key, length):
     return (key * (length // len(key) + 1))[:length]
 
-
+def validate_base64_string(s):
+    """Validate that all characters in string are in the Base64 alphabet"""
+    invalid_chars = [c for c in s if c not in ALPHABET and c != '=']
+    if invalid_chars:
+        raise ValueError(f"Invalid Base64 characters: {invalid_chars}")
+    return True
 
 if __name__ == "__main__":
     # Simple test
@@ -56,6 +69,14 @@ if __name__ == "__main__":
     # Convert to Base64
     b64 = bits_to_base64(bits)
     print(f"Base64: {b64}")
+    print(f"Base64 length: {len(b64)}")
+    print(f"ALPHABET length: {len(ALPHABET)}")
+    print(f"ALPHABET: {ALPHABET}")
+    
+    # Test each character in b64 is in ALPHABET (except '=')
+    for c in b64:
+        if c != '=' and c not in ALPHABET:
+            print(f"WARNING: '{c}' not in ALPHABET!")
     
     # Convert back
     recovered_bits = base64_to_bits(b64)

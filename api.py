@@ -126,7 +126,7 @@ async def decrypt_rot32(request: DecryptRequest):
             description="Received encrypted text"
         ))
         
-        # Step 2: Apply ROT32 decryption (using your existing function)
+        # Step 2: Apply ROT32 decryption
         b64 = rot_cipher._rot_decrypt(request.ciphertext)
         
         # Show ROT32 decryption
@@ -145,7 +145,15 @@ async def decrypt_rot32(request: DecryptRequest):
             description="Applied ROT32 decryption to get Base64"
         ))
         
-        # Step 3: Show Base64 to 6-bit groups
+        # DEBUG: Show what base64_to_bits is doing
+        debug_bits = base64_to_bits(b64)
+        steps.append(TransformationStep(
+            step="DEBUG - raw bits from base64_to_bits",
+            data=debug_bits,
+            description="Raw bits output from base64_to_bits()"
+        ))
+        
+        # Show the 6-bit groups from Base64
         bits_from_b64 = base64_to_bits(b64)
         
         # Show the 6-bit groups from Base64
@@ -162,7 +170,7 @@ async def decrypt_rot32(request: DecryptRequest):
             description="Base64 decoded back to 6-bit groups"
         ))
         
-        # Step 4: Group into 8-bit ASCII
+        # Group into 8-bit ASCII
         eight_bit_groups = []
         for i in range(0, len(bits_from_b64), 8):
             if i+8 <= len(bits_from_b64):
@@ -175,7 +183,7 @@ async def decrypt_rot32(request: DecryptRequest):
             description="6-bit groups recombined into 8-bit ASCII groups"
         ))
         
-        # Step 5: Convert to text (using your existing function)
+        # Convert to text
         result = rot_cipher.decrypt(request.ciphertext)
         steps.append(TransformationStep(
             step="ASCII to text",
@@ -186,7 +194,7 @@ async def decrypt_rot32(request: DecryptRequest):
         return DecryptResponse(result=result, steps=steps)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
+    
 @router.post("/encrypt/vigenere", response_model=EncryptResponse)
 async def encrypt_vigenere(request: EncryptRequest):
     if not request.key:
