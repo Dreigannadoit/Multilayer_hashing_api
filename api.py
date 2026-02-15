@@ -9,7 +9,6 @@ from utils.utils import char_to_ascii_bits, bits_to_base64, base64_to_bits, asci
 rot_cipher = ROT32Cipher()
 vigenere_cipher = VigenereCipher()
 
-# Create router
 router = APIRouter()
 
 # Request/Response models
