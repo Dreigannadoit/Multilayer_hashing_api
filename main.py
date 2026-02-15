@@ -1,36 +1,37 @@
-from modules.Rot_Cryp import ROT32Cipher
-from modules.Vige_Cryp import VigenereCipher
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+from api import router
 
-def run():
-    rot = ROT32Cipher()
-    vig = VigenereCipher()
+app = FastAPI(
+    title="Encryption Visualizer API",
+    description="API for visualizing encryption transformations",
+    version="1.0.0"
+)
 
-    mode = input(
-        "Choose mode (1-ROT32 Encrypt, 2-ROT32 Decrypt, "
-        "3-Vigenere Encrypt, 4-Vigenere Decrypt): "
-    )
 
-    if mode == "1":
-        m = input("Enter a plaintext: ")
-        print("Encrypted Text:", rot.encrypt(m))
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # Vite and React default ports
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-    elif mode == "2":
-        c = input("Enter a ciphertext: ")
-        print("Decrypted Text:", rot.decrypt(c))
+# Include routers
+app.include_router(router, prefix="/api")
 
-    elif mode == "3":
-        m = input("Enter a plaintext: ")
-        k = input("Enter a key: ")
-        print("Encrypted Text:", vig.encrypt(m, k))
-
-    elif mode == "4":
-        c = input("Enter a ciphertext: ")
-        k = input("Enter a key: ")
-        print("Decrypted Text:", vig.decrypt(c, k))
-
-    else:
-        print("Invalid choice")
+@app.get("/")
+async def welcome():
+    return {
+        "message": "Welcome to Encryption Visualizer API",
+        "endpoints": {
+            "encrypt_rot32": "/api/encrypt/rot32",
+            "decrypt_rot32": "/api/decrypt/rot32",
+            "encrypt_vigenere": "/api/encrypt/vigenere",
+            "decrypt_vigenere": "/api/decrypt/vigenere"
+        }
+    }
 
 if __name__ == "__main__":
-    run()
-    # pass
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
