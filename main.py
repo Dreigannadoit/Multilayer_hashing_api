@@ -65,5 +65,5 @@ def run_on_terminal():
         print("Invalid choice")
 
 if __name__ == "__main__":
-    # run_on_terminal()
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    run_on_terminal()
+    # uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

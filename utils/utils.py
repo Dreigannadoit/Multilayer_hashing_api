@@ -16,10 +16,14 @@ if len(ALPHABET) != 64:
         ALPHABET += '/'
 
 def char_to_ascii_bits(s):
+    """Convert string to 8-bit ASCII binary string"""
     return ''.join(f"{ord(c):08b}" for c in s)
 
 def ascii_bits_to_char(bits):
+    """Convert 8-bit binary string to characters"""
     chars = []
+    # Remove any padding bits that might have been added
+    bits = bits[:len(bits) - (len(bits) % 8)]
     for i in range(0, len(bits), 8):
         byte = bits[i:i+8]
         if len(byte) == 8:
@@ -27,15 +31,44 @@ def ascii_bits_to_char(bits):
     return ''.join(chars)
 
 def bits_to_base64(bits):
-    bytes_data = bits_to_bytes(bits)
-    base64_bytes = base64.b64encode(bytes_data)
-    return base64_bytes.decode('utf-8')
+    """Convert binary string to Base64 (following instructor's process)"""
+    # First, group into 6-bit chunks
+    six_bit_groups = []
+    for i in range(0, len(bits), 6):
+        group = bits[i:i+6]
+        # Pad the last group if needed
+        if len(group) < 6:
+            group = group.ljust(6, '0')
+        six_bit_groups.append(group)
+    
+    # Convert each 6-bit group to Base64 character
+    result = ""
+    for group in six_bit_groups:
+        index = int(group, 2)
+        result += ALPHABET[index]
+    
+    # Add padding if needed (Base64 standard padding)
+    padding = (4 - (len(result) % 4)) % 4
+    result += '=' * padding
+    
+    return result
 
 def base64_to_bits(b64):
-    decoded_bytes = base64.b64decode(b64)
-    return bytes_to_bits(decoded_bytes)
+    """Convert Base64 to binary string (following instructor's process)"""
+    # Remove padding
+    b64 = b64.rstrip('=')
+    
+    # Convert each character to 6-bit value
+    bits = ""
+    for char in b64:
+        if char in ALPHABET:
+            index = ALPHABET.index(char)
+            bits += f"{index:06b}"
+    
+    return bits
 
 def bits_to_bytes(bits):
+    """Convert binary string to bytes (for compatibility)"""
     padding = (8 - len(bits) % 8) % 8
     bits_padded = bits + '0' * padding
     
@@ -47,9 +80,11 @@ def bits_to_bytes(bits):
     return bytes(bytes_list)
 
 def bytes_to_bits(bytes_data):
+    """Convert bytes to binary string (for compatibility)"""
     return ''.join(f"{byte:08b}" for byte in bytes_data)
 
 def repeat_key(key, length):
+    """Repeat key to match desired length"""
     return (key * (length // len(key) + 1))[:length]
 
 def validate_base64_string(s):
@@ -60,28 +95,33 @@ def validate_base64_string(s):
     return True
 
 if __name__ == "__main__":
-    # Simple test
-    text = "Hello World!"
-    bits = char_to_ascii_bits(text)
+    # Test with instructor's example
+    text = "Crypto"
     print(f"Original: {text}")
-    print(f"Bits: {bits[:50]}...")
     
-    # Convert to Base64
+    # Step 1: ASCII bits
+    bits = char_to_ascii_bits(text)
+    print(f"ASCII bits (8-bit groups): {' '.join([bits[i:i+8] for i in range(0, len(bits), 8)])}")
+    
+    # Step 2: 6-bit groups
+    six_bit_groups = []
+    padded_bits = bits
+    # Pad to multiple of 6
+    if len(padded_bits) % 6 != 0:
+        padded_bits = padded_bits.ljust(((len(padded_bits) // 6) + 1) * 6, '0')
+    
+    for i in range(0, len(padded_bits), 6):
+        six_bit_groups.append(padded_bits[i:i+6])
+    print(f"6-bit groups: {' '.join(six_bit_groups)}")
+    
+    # Step 3: Base64
     b64 = bits_to_base64(bits)
     print(f"Base64: {b64}")
-    print(f"Base64 length: {len(b64)}")
-    print(f"ALPHABET length: {len(ALPHABET)}")
-    print(f"ALPHABET: {ALPHABET}")
     
-    # Test each character in b64 is in ALPHABET (except '=')
-    for c in b64:
-        if c != '=' and c not in ALPHABET:
-            print(f"WARNING: '{c}' not in ALPHABET!")
-    
-    # Convert back
+    # Step 4: Back to bits
     recovered_bits = base64_to_bits(b64)
-    recovered_text = ascii_bits_to_char(recovered_bits)
-    print(f"Recovered: {recovered_text}")
+    print(f"Recovered 6-bit groups: {' '.join([recovered_bits[i:i+6] for i in range(0, len(recovered_bits), 6)])}")
     
-    # Test repeat_key
-    print(f"\nrepeat_key('KEY', 10): {repeat_key('KEY', 10)}")
+    # Step 5: Back to text
+    recovered_text = ascii_bits_to_char(recovered_bits)
+    print(f"Recovered text: {recovered_text}")
