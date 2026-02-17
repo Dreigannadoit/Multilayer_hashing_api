@@ -11,6 +11,7 @@ Read the following topics in Obfuscating Data ([click here](https://online.msuii
 
 ----
 
+
 ### Sample Input, Process, and Output
 
 #### For encryption:
