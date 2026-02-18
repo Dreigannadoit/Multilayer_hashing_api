@@ -4,7 +4,9 @@ from utils.utils import (
     ascii_bits_to_char,
     bits_to_base64,
     base64_to_bits,
-    repeat_key
+    repeat_key,
+    remove_spaces,
+    return_spaces
 )
 
 class VigenereCipher:
@@ -29,7 +31,8 @@ class VigenereCipher:
 
     def encrypt(self, plaintext, key):
         # Convert plaintext to ASCII bits -> Convert plaintext bits to Base64 -> Convert key to ASCII bits -> Convert key bits to Base64 -> Repeat key to match plaintext length -> Apply Vigenere encryption
-        m_bits = char_to_ascii_bits(plaintext)
+        no_space_plaintext = remove_spaces(plaintext)
+        m_bits = char_to_ascii_bits(no_space_plaintext)
         m_b64 = bits_to_base64(m_bits)
         m_b64 = m_b64.rstrip('=')
         k_bits = char_to_ascii_bits(key)
@@ -40,10 +43,12 @@ class VigenereCipher:
 
     def decrypt(self, ciphertext, key):
         # Convert key to ASCII bits -> Convert key bits to Base64 -> Repeat key to match ciphertext length -> Apply Vigenere decryption -> Convert Base64 to bits -> Convert bits to text
+        
         k_bits = char_to_ascii_bits(key)
         k_b64 = bits_to_base64(k_bits)
         k_b64 = k_b64.rstrip('=')
         k_b64 = repeat_key(k_b64, len(ciphertext))
         m_b64 = self._decrypt_base64(ciphertext, k_b64)
         bits = base64_to_bits(m_b64)
-        return ascii_bits_to_char(bits)
+        msg = ascii_bits_to_char(bits)
+        return return_spaces(msg)
