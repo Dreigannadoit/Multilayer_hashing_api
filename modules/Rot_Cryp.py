@@ -3,7 +3,9 @@ from utils.utils import (
     char_to_ascii_bits,
     ascii_bits_to_char,
     bits_to_base64,
-    base64_to_bits
+    base64_to_bits,
+    remove_spaces,
+    return_spaces
 )
 
 class ROT32Cipher:
@@ -34,7 +36,8 @@ class ROT32Cipher:
 
     def encrypt(self, plaintext):
         # Process: ASCII bits -> Step 2: Group into 6 bits and convert to Base64 -> Step 3: Apply ROT32 rotation
-        bits = char_to_ascii_bits(plaintext)
+        norm_ = remove_spaces(plaintext)
+        bits = char_to_ascii_bits(norm_)
         b64 = bits_to_base64(bits)
         return self._rot_encrypt(b64)
 
@@ -42,4 +45,5 @@ class ROT32Cipher:
         # Apply ROT32 decryption -> Convert Base64 to bits -> Group into 8 bits and convert to text
         b64 = self._rot_decrypt(ciphertext)
         bits = base64_to_bits(b64)
-        return ascii_bits_to_char(bits)
+        char = ascii_bits_to_char(bits)
+        return remove_spaces(char)
